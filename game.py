@@ -13,8 +13,7 @@ class Board:
                 return 2
             return -1
     def place(self, x, y):
-        if self.isFull():
-            self.checkWinner()
+
 
         if self.board[y][x] == -1:
             self.board[y][x] = self.turn
@@ -22,13 +21,17 @@ class Board:
                 self.turn = 0
             elif not self.turn:
                 self.turn = 1
-            # print(self.board, self.turn)
+        
+        if self.checkWinner() != -1:
+            
+            return self.checkWinner()
 
     def isFull(self):
-        if -1 not in self.board:
-            return True
-        else:
-            return False
+        for i in self.board:
+            if -1 in i:
+                return False
+
+        return True
         
     def winningCombinations(self):
         winningCombos = [
@@ -103,8 +106,12 @@ while running:
                 mouse_pos = pygame.mouse.get_pos()
                 
                 choice = tuple((a-b)//100 for a,b in zip(mouse_pos,(150,150)))
-                # print(choice)
-                game.board.place(choice[0],choice[1])
+                if not (choice[0] > 2 or choice[0] < 0 or choice[1] > 2 or choice[1] < 0):
+                    place = game.board.place(choice[0],choice[1])
+                    print(place)
+                    if place in [0,1,2]:
+                        game.board.board = [[-1, -1, -1],[-1, -1, -1],[-1, -1, -1]]
+                    
     screen.fill((255,255,255))
 
     game.drawBoard(screen)
